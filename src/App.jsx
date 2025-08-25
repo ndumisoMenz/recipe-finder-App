@@ -1,6 +1,6 @@
 import SearchBar from "./components/SearchBar"
 import Home from "./pages/Home"
-import { useState,useEffect } from "react"
+import { useState,useEffect, useCallback } from "react"
 import RecipeDetails from "./pages/RecipeDetails";
 import {BrowserRouter as Router,Route, Routes} from "react-router-dom"
 import Header from "./components/Header";
@@ -53,7 +53,7 @@ function App() {
 
   
 
-  const onSearch = ({ maxTime, tags }) => {
+  const onSearch =({ maxTime, tags }) => {
     let filtered = initialRecipes;
 
   
@@ -95,12 +95,12 @@ function App() {
       </>
     }/>
     <Route path='/favorites' element={
-      <div className="grid gap-1.5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+       <>
         <Favorites favoriteRecipes={favoritesRecipe} favorites={favorites} toggleFavorite={toggleFavorite}/>
-      </div>
+      </>
      }/>
     <Route path='/recipe/:id' element=
-      {/*selectedRecipe &&*/<RecipeDetails recipes={initialRecipes}/>} 
+      {<RecipeDetails recipes={recipes}/>} 
       />
     </Routes>
     </>

@@ -9,7 +9,7 @@ const RecipeCard = ({recipe,onSelect,favorite,toggleFavorite }) => {
   const navigate=useNavigate();
 
   const selectRecipe=()=>{
-    onSelect(recipe)
+   onSelect(recipe)
     navigate(`/recipe/${recipe.id}`)
   }
 

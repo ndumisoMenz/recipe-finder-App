@@ -1,9 +1,12 @@
 
-import { useParams } from "react-router-dom"
+import { useParams,Link } from "react-router-dom"
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const RecipeDetails = ({recipes}) => {
 
+    
     const{id}=useParams();
+    console.log('should have been able to get the id')
     const recipe=recipes.find((r)=>String(r.id)===id)
 
     if(!recipe){
@@ -11,6 +14,12 @@ const RecipeDetails = ({recipes}) => {
     }
 
   return (
+    <>
+    <div className="flex justify-center">
+            <Link className=' flex items-center gap-2 underline bg-gray-200 text-black px-3 py-1 rounded no-underline mb-2' to="/">
+             <IoMdArrowRoundBack/> Go Home
+             </Link>
+      </div>
       <div className="grid w-screen gap-1.5 grid-cols-1 sm:grid-cols-2">
         <div className="transition-all duration-100 hover:scale-110 w-full sm:w-96 md:w-96 max-h-64 bg-orange-400 flex justify-end justify-self-end">
             <img className="object-cover w-full " src={recipe.image}/>
@@ -30,7 +39,7 @@ const RecipeDetails = ({recipes}) => {
             <div className="m-1.5 md:mt-7 md:ml-3 text-pretty justify-start">
                 <ul className="list-disc list-inside">
                     {recipe.ingredients.map((ing,index)=>(
-                        <li>{ing.quantity} {ing.name}</li>
+                        <li key={index}>{ing.quantity} {ing.name}</li>
                     ))}
                 </ul>
             </div>
@@ -45,7 +54,9 @@ const RecipeDetails = ({recipes}) => {
 
             </ol>
         </div>
+        
       </div>
+      </>
   )
 }
 
