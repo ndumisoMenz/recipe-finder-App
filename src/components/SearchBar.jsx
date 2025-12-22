@@ -6,7 +6,6 @@ const SearchBar = ({onSearch}) => {
   
   const[maxTime,setMaxTime]=useState("")
   const[tags,setTags]=useState([])
-  const inputRef = useRef(null);
 
   const handleTagClick=(tag)=>{
     setTags((prev)=>prev.includes(tag) ? prev.filter((t)=>t !==tag):[...prev,tag]);
@@ -18,10 +17,6 @@ const SearchBar = ({onSearch}) => {
    onSearch({maxTime,tags,})
    
   },[maxTime,tags])
-
-   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
 
   const resetFilters=()=>{
@@ -36,7 +31,7 @@ const SearchBar = ({onSearch}) => {
     <>
     <div className="bg-transparent rounded-xl p-3 m-auto max-w-4xl">
       <div className="flex items-center p-2.5 border border-gray-600 border-solid rounded-lg mb-5">
-           <input ref={inputRef} className="border-none outline-none text-base  flex-1" type="number" value={maxTime} onChange={(e)=>setMaxTime(e.target.value)} placeholder="max minutes"/>
+           <input className="border-none outline-none text-base  flex-1" type="number" value={maxTime} onChange={(e)=>setMaxTime(e.target.value)} placeholder="max minutes"/>
 
            
 
