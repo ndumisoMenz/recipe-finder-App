@@ -6,6 +6,7 @@ import {BrowserRouter as Router,Route, Routes} from "react-router-dom"
 import Header from "./components/Header";
 import Favorites from "./pages/Favorites";
 import recipeData from "./recipes.json"
+import Footer from "./components/Footer";
 
 function App() {
 
@@ -103,6 +104,7 @@ function App() {
       {<RecipeDetails theme={theme} recipes={recipes}/>} 
       />
     </Routes>
+    <Footer theme={theme}/>
     </>
   </Router>
   )
