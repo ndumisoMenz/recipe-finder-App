@@ -38,11 +38,11 @@ function App() {
   useEffect(()=>{
 
     if (theme === "light") {
-    document.body.style.backgroundColor = "WhiteSmoke";
-    document.body.style.color = "black";
+    document.body.style.backgroundColor = "#8fbc8f";
+    document.body.style.color = "#415376";
   } else {
     document.body.style.backgroundColor = "#353935";
-    //document.body.style.color = "white";
+    document.body.style.color = "white";
   }
 
     document.documentElement.setAttribute('data-theme',theme)
@@ -96,11 +96,11 @@ function App() {
     }/>
     <Route path='/favorites' element={
        <>
-        <Favorites favoriteRecipes={favoritesRecipe} favorites={favorites} toggleFavorite={toggleFavorite}/>
+        <Favorites theme={theme} onSelect={handleSelect} favoriteRecipes={favoritesRecipe} favorites={favorites} toggleFavorite={toggleFavorite}/>
       </>
      }/>
     <Route path='/recipe/:id' element=
-      {<RecipeDetails recipes={recipes}/>} 
+      {<RecipeDetails theme={theme} recipes={recipes}/>} 
       />
     </Routes>
     </>

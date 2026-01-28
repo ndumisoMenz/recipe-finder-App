@@ -24,10 +24,13 @@ const Home = ({recipes,onSelect,favorites,toggleFavorite}) => {
     if(currentPage>1)setCurrentPage((prev)=>prev-1)
   }
 
-  //const recipesToDisplay=!maxMinutes ? filteredRecipes.slice(0,ITEMS_TO_SHOW):filteredRecipes
 
   return (
     <>
+    <div className="relative w-full h-[40vh] my-6">
+      <img className="w-full h-full object-cover rounded-2xl" src="/images/recipes.jpg" alt="background inage"/>
+      <h3 className="absolute text-white flex items-center justify-center text-3xl italic sm:text-5xl text-center inset-0">Search for your favorite recipe</h3>
+    </div>
     <div className="grid gap-1.5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       {recipesToDisplay.map((recipe)=>(<RecipeCard key={recipe.id} recipe={recipe} onSelect={onSelect} favorite={!!favorites[recipe.id]} toggleFavorite={toggleFavorite}/> ))}
     </div>
@@ -35,15 +38,15 @@ const Home = ({recipes,onSelect,favorites,toggleFavorite}) => {
 
       <div className="flex justify-center items-center gap-4 mt-6">
         <button onClick={goToPrevPage} disabled={currentPage===1} 
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
+            className="px-3 py-1 bg-gray-200 text-gray-900 rounded disabled:opacity-50">
               Previous
         </button>
-        <span>
+        <span className="text-gray-900">
           Page {currentPage} of {totalPages}
         </span>
         <button
             onClick={goToNextPage} disabled={currentPage==totalPages}
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
+            className="px-3 py-1 bg-gray-200 text-gray-900 rounded disabled:opacity-50">
               Next
         </button>
       </div>

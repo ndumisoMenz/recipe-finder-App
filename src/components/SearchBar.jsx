@@ -30,18 +30,17 @@ const SearchBar = ({onSearch}) => {
   return (
     <>
     <div className="bg-transparent rounded-xl p-3 m-auto max-w-4xl">
-      <div className="flex items-center p-2.5 border border-gray-600 border-solid rounded-lg mb-5">
-           <input className="border-none outline-none text-base  flex-1" type="number" value={maxTime} onChange={(e)=>setMaxTime(e.target.value)} placeholder="max minutes"/>
+      <div className="flex items-center border border-gray-600 border-solid rounded-lg mb-5">
+           <input className="border-none min-h-10 rounded-2xl outline-none text-base  flex-1" type="number" value={maxTime} onChange={(e)=>setMaxTime(e.target.value)} placeholder="max minutes"/>
 
-           
 
       </div>
       
-      <div className="flex gap mb-4 flex-wrap">
+      <div className="flex justify-center gap-1 mb-4 flex-wrap">
       {TAG_OPTIONS.map((tag)=>(
         <button key={tag} onClick={()=>handleTagClick(tag)}
         className={`px-4 py-2 rounded-full border ${tags.includes(tag)? "bg-green-600 text-white":
-          "bg-gray-200 text-black"
+          "bg-white text-black"
         }`}>
           {tag}
         </button>
