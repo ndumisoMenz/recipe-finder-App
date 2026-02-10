@@ -1,113 +1,119 @@
-import SearchBar from "./components/SearchBar"
+import { useState, useEffect, useCallback } from "react"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
-import { useState,useEffect, useCallback } from "react"
-import RecipeDetails from "./pages/RecipeDetails";
-import {BrowserRouter as Router,Route, Routes} from "react-router-dom"
-import Header from "./components/Header";
-import Favorites from "./pages/Favorites";
+import RecipeDetails from "./pages/RecipeDetails"
+import Header from "./components/Header"
+import Favorites from "./pages/Favorites"
+import Footer from "./components/Footer"
 import recipeData from "./recipes.json"
-import Footer from "./components/Footer";
+import SearchBar from "./components/SearchBar"
 
 function App() {
+  const initialRecipes = recipeData
 
-  const initialRecipes= recipeData
-
-  const[favorites,setFavorites]=useState(()=>{
-    const saved=localStorage.getItem("favorites")
-    return saved? JSON.parse(saved):{}
+ 
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("favorites")
+    return saved ? JSON.parse(saved) : {}
   })
 
-  useEffect(()=>{
-    localStorage.setItem("favorites",JSON.stringify(favorites))
-  },[favorites])
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites))
+  }, [favorites])
 
-  const toggleFavorite=(id)=>{
-    setFavorites((prev)=>({
+  const toggleFavorite = (id) => {
+    setFavorites((prev) => ({
       ...prev,
-      [id]:!prev[id]
+      [id]: !prev[id],
     }))
   }
 
-  const favoritesRecipe=initialRecipes.filter((recipe)=>favorites[recipe.id])
+  const favoritesRecipe = initialRecipes.filter((recipe) => favorites[recipe.id])
 
+  
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light")
 
-
-  const[theme,setTheme]=useState(()=>{
-    return localStorage.getItem("theme") ||"light"
-  })
-
-  useEffect(()=>{
-
+  useEffect(() => {
     if (theme === "light") {
-    document.body.style.backgroundColor = "#8fbc8f";
-    document.body.style.color = "#415376";
-  } else {
-    document.body.style.backgroundColor = "#353935";
-    document.body.style.color = "white";
-  }
-
-    document.documentElement.setAttribute('data-theme',theme)
-    localStorage.setItem("theme",theme)
-  },[theme])
-
-  const [recipes, setRecipes] = useState(initialRecipes);
-
-  
-
-  const onSearch =({ maxTime, tags }) => {
-    let filtered = initialRecipes;
-
-  
-    if (maxTime !== "" && !isNaN(maxTime)) {
-      filtered = filtered.filter((recipe) => recipe.timeMinutes <= maxTime);
+      document.body.style.backgroundColor = "#8fbc8f"
+      document.body.style.color = "#415376"
+    } else {
+      document.body.style.backgroundColor = "#353935"
+      document.body.style.color = "white"
     }
 
+    document.documentElement.setAttribute("data-theme", theme)
+    localStorage.setItem("theme", theme)
+  }, [theme])
+
   
+  const [recipes, setRecipes] = useState(initialRecipes)
+
+  
+  const onSearch = useCallback(({ searchText, tags }) => {
+    let filtered = initialRecipes
+
+    if (searchText && searchText.trim() !== "") {
+      const lower = searchText.toLowerCase()
+      filtered = filtered.filter((r) => r.title.toLowerCase().includes(lower))
+    }
+
     if (tags && tags.length > 0) {
       filtered = filtered.filter((recipe) =>
         tags.every((tag) =>
           recipe.dietary?.map((d) => d.toLowerCase()).includes(tag.toLowerCase())
         )
-      );
+      )
     }
 
-    setRecipes(filtered);
-  };
+    setRecipes(filtered)
+  }, [initialRecipes])
 
-  const[selectedRecipe,setSelectedRecipe]=useState()
-
-  const handleSelect=(recipe)=>{
-    setSelectedRecipe(recipe) 
-  };
   
+  const handleSelect = (id) => {}
 
   return (
-  <Router>
-    <>
-    <Header theme={theme} setTheme={setTheme}/>
-    <Routes>
-      <Route path='/' element={
-        <>
-      <SearchBar onSearch={onSearch}/>
-      <div>
-        <Home recipes={recipes} onSelect={handleSelect} favorites={favorites} toggleFavorite={toggleFavorite} />
-      </div>
-      
-      </>
-    }/>
-    <Route path='/favorites' element={
-       <>
-        <Favorites theme={theme} onSelect={handleSelect} favoriteRecipes={favoritesRecipe} favorites={favorites} toggleFavorite={toggleFavorite}/>
-      </>
-     }/>
-    <Route path='/recipe/:id' element=
-      {<RecipeDetails theme={theme} recipes={recipes}/>} 
-      />
-    </Routes>
-    <Footer theme={theme}/>
-    </>
-  </Router>
+    <Router>
+      <Header theme={theme} setTheme={setTheme} />
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              recipes={recipes}
+              onSelect={handleSelect} 
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+              onSearch={onSearch} 
+              theme={theme}
+            />
+          }
+        />
+
+        <Route
+          path="/favorites"
+          element={
+            <Favorites
+              theme={theme}
+              onSelect={handleSelect}
+              favoriteRecipes={favoritesRecipe}
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+            />
+          }
+        />
+
+        <Route
+          path="/recipe/:id"
+          element={<RecipeDetails theme={theme} recipes={initialRecipes} />}
+        />
+      </Routes>
+
+      <Footer theme={theme} />
+    </Router>
   )
 }
 
 export default App
+

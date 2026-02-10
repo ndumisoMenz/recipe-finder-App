@@ -11,7 +11,7 @@ const RecipeCard = ({ recipe, onSelect, favorite, toggleFavorite }) => {
   };
 
   return (
-    <div className="group relative w-full max-w-5xl h-auto md:h-72 bg-white rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col md:flex-row border border-gray-100 mb-6">
+    <div className="group relative w-full max-w-full h-auto md:h-72 bg-white rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col md:flex-row border border-gray-100 mb-6">
       
       
       <div 
