@@ -11,7 +11,7 @@ import SearchBar from "./components/SearchBar"
 function App() {
   const initialRecipes = recipeData
 
- 
+
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("favorites")
     return saved ? JSON.parse(saved) : {}
@@ -30,7 +30,7 @@ function App() {
 
   const favoritesRecipe = initialRecipes.filter((recipe) => favorites[recipe.id])
 
-  
+
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light")
 
   useEffect(() => {
@@ -46,31 +46,54 @@ function App() {
     localStorage.setItem("theme", theme)
   }, [theme])
 
-  
+
   const [recipes, setRecipes] = useState(initialRecipes)
 
-  
+
   const onSearch = useCallback(({ searchText, tags }) => {
     let filtered = initialRecipes
 
+    const normalize = (str) =>
+      str ? str.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim() : ''
+
     if (searchText && searchText.trim() !== "") {
-      const lower = searchText.toLowerCase()
-      filtered = filtered.filter((r) => r.title.toLowerCase().includes(lower))
+      const searchTerms = normalize(searchText).split(" ").filter(term => term.length > 0)
+
+      filtered = filtered.filter((recipe) => {
+        const recipeTitle = normalize(recipe.title)
+        const recipeIngredients = recipe.ingredients.map(ing => normalize(ing.name)).join(" ")
+        const recipeTags = recipe.tags.map(tag => normalize(tag)).join(" ")
+        const recipeDietary = recipe.dietary?.map(d => normalize(d)).join(" ") || ""
+
+        const searchableText = `${recipeTitle} ${recipeIngredients} ${recipeTags} ${recipeDietary}`
+
+        // Match if ALL search terms are found in the recipe data (more accurate)
+        return searchTerms.every(term => searchableText.includes(term))
+      })
     }
 
     if (tags && tags.length > 0) {
-      filtered = filtered.filter((recipe) =>
-        tags.every((tag) =>
-          recipe.dietary?.map((d) => d.toLowerCase()).includes(tag.toLowerCase())
-        )
-      )
+      filtered = filtered.filter((recipe) => {
+        const recipeDietaryLower = (recipe.dietary || []).map(d => d.toLowerCase())
+
+        return tags.every((tag) => {
+          const tagLower = tag.toLowerCase()
+
+          // If filtering for "vegetarian", also allow "vegan"
+          if (tagLower === "vegetarian") {
+            return recipeDietaryLower.includes("vegetarian") || recipeDietaryLower.includes("vegan")
+          }
+
+          return recipeDietaryLower.includes(tagLower)
+        })
+      })
     }
 
     setRecipes(filtered)
   }, [initialRecipes])
 
-  
-  const handleSelect = (id) => {}
+
+  const handleSelect = (id) => { }
 
   return (
     <Router>
@@ -82,10 +105,10 @@ function App() {
           element={
             <Home
               recipes={recipes}
-              onSelect={handleSelect} 
+              onSelect={handleSelect}
               favorites={favorites}
               toggleFavorite={toggleFavorite}
-              onSearch={onSearch} 
+              onSearch={onSearch}
               theme={theme}
             />
           }
