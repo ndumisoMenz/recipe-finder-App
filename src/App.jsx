@@ -35,11 +35,11 @@ function App() {
 
   useEffect(() => {
     if (theme === "light") {
-      document.body.style.backgroundColor = "#8fbc8f"
-      document.body.style.color = "#415376"
+      document.body.style.backgroundColor = "#faf9f6"
+      document.body.style.color = "#1a1a1a"
     } else {
-      document.body.style.backgroundColor = "#353935"
-      document.body.style.color = "white"
+      document.body.style.backgroundColor = "#0f1113"
+      document.body.style.color = "#f0f2f5"
     }
 
     document.documentElement.setAttribute("data-theme", theme)
